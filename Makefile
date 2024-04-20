@@ -2,16 +2,16 @@ exec := main.out
 out := out
 sources := $(wildcard src/*.cc)
 objects := $(sources:.cc=.o)
+flags := -std=c++20
 
-build: $(exec)
-	@echo "---------"
-	@./main.out
+test.mra:
+	./main /home/wgxh_cli/codes/maria/test.mra
 
 $(exec): prebuild $(objects)
-	clang++ $(foreach obj,$(objects),$(out)/$(notdir $(obj))) -o $(exec)
+	clang++ $(flag) $(foreach obj,$(objects),$(out)/$(notdir $(obj))) -o $(exec)
 
 %.o:
-	clang++ -c $(basename $@).cc -o ./$(out)/$(notdir $@)
+	clang++ $(flag) -c $(basename $@).cc -o ./$(out)/$(notdir $@)
 
 prebuild:
 	@mkdir -p out

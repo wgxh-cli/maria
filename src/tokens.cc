@@ -1,20 +1,10 @@
 #include "includes/tokens.h"
-#include <cctype>
 
-inline bool is_whitespace(char ch) {
+bool is_whitespace(char ch) {
   return WHITESPACES.find(ch) != string::npos;
 }
-inline bool is_linebreak(char ch) {
+bool is_linebreak(char ch) {
   return LINEBREAKS.find(ch) != string::npos;
-}
-// must start with a alphabetical
-bool valid_ident(string ident) {
-  if (ident == "") return false;
-  if (!isalpha(ident[0])) return false;
-  for (int i = 1; i < ident.length(); i++) {
-    if (is_whitespace(ident[i])) return false;
-  }
-  return true;
 }
 
 Token::Token(TokenType type, string value) {
@@ -27,6 +17,10 @@ Token::Token(string value) {
 }
 
 Token::~Token() {}
+
+Token Token::copy() {
+  return Token(this->type, this->value);
+}
 
 RawSource::RawSource(string source) {
   this->source = source;
@@ -61,7 +55,7 @@ void RawSource::advance() {
 }
 
 void RawSource::advance_by(int n) {
-  for (int i = 0; i <= n; i++) {
+  for (int i = 1; i <= n; i++) {
     this->advance();
   }
 }

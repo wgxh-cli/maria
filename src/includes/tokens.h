@@ -2,27 +2,65 @@
 #include <map>
 using namespace std;
 
-enum TokenType {
-  KW_IMPORT, // 'import'
-  KW_WHERE, // 'where'
-  NUM, // /[1-9]*/
-  IDENT, // /[a-z1-9_$']*/
-  ARROW_LEFT, // <
-  ARROW_RIGHT, // >
-  STAR, // *
-  HASH, // #
-  DOT, // .
-  UNDERSCORE, // _
-  AND, // &
-  PERCENTAGE, // %
-  AT, // @
-  PLUS, // +
-  MINUS, // -
-  DIV, // /
+#define DYN_TOKENS \
+X(IDENT, "IDENT") \
+X(STRING, "STRING") \
+X(DECIMAL, "DECIMAL") \
+X(WHITESPACE, "WHITESPACE") \
 
-  INVALID, // Invalid token
-  EMPTY, // Uninitialized empty token
+#define STATIC_TOKENS \
+X(KW_IMPORT, "import") \
+X(KW_WHERE, "where") \
+X(KW_IF, "if") \
+X(KW_THEN, "then") \
+X(KW_ELSE, "else") \
+X(KW_CASE, "case") \
+X(KW_OF, "of") \
+X(KW_EXTERN, "extern") \
+X(KW_LET, "let") \
+X(KW_IN, "in") \
+X(ARROW_LEFT, "<") \
+X(ARROW_RIGHT, ">") \
+X(STAR, "*") \
+X(HASH, "#") \
+X(DOT, ".") \
+X(UNDERSCORE, "_") \
+X(AND, "&") \
+X(PERCENTAGE, "%") \
+X(AT, "@") \
+X(PLUS, "+") \
+X(MINUS, "-") \
+X(DIV, "/") \
+X(L_BRACKET, "[") \
+X(R_BRACKET, "]") \
+X(L_BRACE, "{") \
+X(R_BRACE, "}") \
+X(L_PAREN, "(") \
+X(R_PAREN, ")") \
+X(SEMICOLON, ";") \
+X(COLON, ":") \
+X(EQUAL, "=") \
+X(POWER, "^") \
+X(COMMA, ",") \
+
+#define OTHER_TOKENS \
+X(EMPTY, "EMPTY") \
+
+#define TOKEN_TYPES \
+DYN_TOKENS \
+STATIC_TOKENS \
+OTHER_TOKENS \
+
+#define X(a, b) a,
+enum TokenType {
+  TOKEN_TYPES
 };
+#undef X
+#define X(a, b) { a, b },
+static const map<TokenType, string> DEBUG_INFO {
+  TOKEN_TYPES
+};
+#undef X
 
 template <typename K, typename V>
 static inline map<V, K> reverse(const map<K, V> original) {
@@ -33,22 +71,11 @@ static inline map<V, K> reverse(const map<K, V> original) {
 
   return res;
 }
+#define X(a, b) { b, a },
 static const map<string, TokenType> VALUE_TOKEN_TABLE {
-  { "import", KW_IMPORT },
-  { "where", KW_WHERE },
-  { "<", ARROW_LEFT },
-  { ">", ARROW_RIGHT },
-  { "*", STAR },
-  { "#", HASH },
-  { ".", DOT },
-  { "_", UNDERSCORE },
-  { "&", AND },
-  { "%", PERCENTAGE },
-  { "@", AT },
-  { "+", PLUS },
-  { "-", MINUS },
-  { "/", DIV },
+  STATIC_TOKENS
 };
+#undef X
 static const map<TokenType, string> TOKEN_VALUE_TABLE = reverse(VALUE_TOKEN_TABLE);
 
 class Token {
@@ -58,6 +85,7 @@ public:
 
   Token(TokenType type, string value);
   Token(string value);
+  Token copy();
   ~Token();
 };
 
@@ -66,7 +94,6 @@ static const string LINEBREAKS = "\n\r\0";
 
 bool is_whitespace(char ch);
 bool is_linebreak(char ch);
-bool valid_ident(string ident);
 
 class Cursor {
 public:

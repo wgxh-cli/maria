@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <cctype>
 #include "includes/utils.h"
@@ -192,4 +193,30 @@ void Lexer::debug(bool show_space) {
     cout << "  (" << DEBUG_INFO.at(t.type) << " " << t.value << ")" << endl;
   }
   cout << "]" << endl;
+}
+
+Lexer Lexer::copy() {
+  Lexer lexer(source);
+  lexer.current = current;
+  lexer.tokens = tokens;
+
+  return lexer;
+}
+
+FakeLexer::FakeLexer(Lexer * lexer) : Lexer(lexer->source) {
+  current = lexer->current;
+  tokens = lexer->tokens;
+  advanced = 0;
+}
+FakeLexer::~FakeLexer() {}
+
+bool FakeLexer::next_token() {
+  advanced += 1;
+  return this->Lexer::next_token();
+}
+
+void FakeLexer::merge(Lexer * lexer) {
+  for (int i = 0; i < advanced; i++) {
+    lexer->next_token();
+  }
 }

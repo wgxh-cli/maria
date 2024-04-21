@@ -7,7 +7,7 @@ using namespace std;
 namespace parser {
 #define AST_NODE_TYPES \
 X(ROOT, "ROOT") \
-X(EXPR, "HELLo") \
+X(EXPR, "HELLO") \
 X(DECLARATION, "DECL") \
 X(IDENT, "IDENT") \
 X(UNINITIALIZED, "INVALID") \
@@ -65,7 +65,13 @@ public:
   ~Parser();
 
   void mark_start();
-  void mark_end(ASTNodeType type);
+  void cancel();
+  void mark_end(ASTNodeType type, string value = "");
+
+  bool test_ident();
+  bool test_decl();
+
+  Parser copy();
 
   void debug();
 };

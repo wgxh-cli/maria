@@ -27,8 +27,22 @@ public:
   bool test_decimal();
   bool test_whitespace();
 
+  Lexer copy();
+
   void debug(bool show_spaces);
 
   bool next_token();
   bool next_skip_space();
+};
+
+class FakeLexer : public Lexer {
+private:
+  unsigned int advanced;
+public:
+  FakeLexer(Lexer * original);
+  ~FakeLexer();
+
+  bool next_token();
+
+  void merge(Lexer * lexer);
 };

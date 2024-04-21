@@ -35,6 +35,20 @@ bool valid_ident(string ident) {
   return true;
 }
 
+bool valid_sident(string ident) {
+  if (ident == "") return false;
+  if(isalpha(ident[0]) || isalnum(ident[0])) return false;
+  for (int i = 1; i < ident.length(); i++) {
+    if (
+      IDENT_TERMINATOR.find(ident[i]) != string::npos ||
+      isalpha(ident[i]) ||
+      is_whitespace(ident[i])
+    ) return false;
+  }
+
+  return true;
+}
+
 bool Lexer::test_ident() {
   RawSource fake = this->source.peekable();
   string ident = "";
@@ -48,6 +62,11 @@ bool Lexer::test_ident() {
   }
   if (valid_ident(ident)) {
     this->current = Token(IDENT, ident);
+    this->source.advance_by(ident.length());
+
+    return true;
+  } else if (valid_sident(ident)) {
+    this->current = Token(SIDENT, ident);
     this->source.advance_by(ident.length());
 
     return true;
@@ -141,17 +160,29 @@ bool Lexer::next_token() {
   // Always go dynamic token check first
   // Fuck it, actually should go static otkne check first, but annoying :(
    bool res =
-    this->test_token_table() ||
     this->test_whitespace() ||
     this->test_ident() ||
     this->test_decimal() ||
-    this->test_string();
+    this->test_string() ||
+    this->test_token_table();
 
   if (res) {
     this->tokens.push_back(this->current.copy());
   }
 
   return res;
+}
+
+bool Lexer::next_skip_space() {
+  if (this->next_token()) {
+    if (this->current.type == WHITESPACE) {
+      return this->next_skip_space();
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
 }
 
 void Lexer::debug(bool show_space) {

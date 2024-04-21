@@ -2,8 +2,11 @@
 #include <map>
 using namespace std;
 
+// `SIDENT` means special ident, which consists of non-alphabet characters
+// Why? I want arithmetic operation "+", "-" and so on to be a function defined in the language
 #define DYN_TOKENS \
 X(IDENT, "IDENT") \
+X(SIDENT, "SIDENT") \
 X(STRING, "STRING") \
 X(DECIMAL, "DECIMAL") \
 X(WHITESPACE, "WHITESPACE") \
@@ -28,8 +31,6 @@ X(UNDERSCORE, "_") \
 X(AND, "&") \
 X(PERCENTAGE, "%") \
 X(AT, "@") \
-X(PLUS, "+") \
-X(MINUS, "-") \
 X(DIV, "/") \
 X(L_BRACKET, "[") \
 X(R_BRACKET, "]") \
@@ -38,6 +39,7 @@ X(R_BRACE, "}") \
 X(L_PAREN, "(") \
 X(R_PAREN, ")") \
 X(SEMICOLON, ";") \
+X(DOUBLE_COLON, "::") \
 X(COLON, ":") \
 X(EQUAL, "=") \
 X(POWER, "^") \
@@ -100,6 +102,8 @@ public:
   int index;
   int row;
   int col;
+  
+  Cursor copy();
 };
 
 class RawSource {

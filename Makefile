@@ -2,7 +2,7 @@ exec := main.out
 out := out
 sources := $(wildcard src/*.cc)
 objects := $(sources:.cc=.o)
-flags := -std=c++20
+flags := -std=c++20 -g
 
 test.mra:
 	./main /home/wgxh_cli/codes/maria/test.mra

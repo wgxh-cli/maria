@@ -3,11 +3,11 @@
 #include "tokens.h"
 using namespace std;
 
-// Actually any token that already have its definition in token table is terminator.
-static const string IDENT_TERMINATOR = ";\n ()[]{}^+-";
+static const string IDENT_TERMINATOR = ";\n ()[]{}";
 
 bool is_ident_terminator(char ch);
 bool valid_ident(string ident);
+bool valid_sident(string ident);
 
 class Lexer {
 public:
@@ -30,4 +30,5 @@ public:
   void debug(bool show_spaces);
 
   bool next_token();
+  bool next_skip_space();
 };

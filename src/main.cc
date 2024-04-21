@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include "includes/lexer.h"
+#include "includes/parser.h"
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -39,6 +39,23 @@ int main(int argc, char* argv[]) {
     }
   }
   lexer.debug(debug_show_space);
+
+  using namespace parser;
+  Parser parser(lexer);
+
+  parser.mark_start();
+  parser.mark_start();
+
+  parser.mark_start();
+  parser.mark_end(ROOT);
+
+  parser.mark_start();
+  parser.mark_end(ROOT);
+
+  parser.mark_end(ROOT);
+  parser.mark_end(ROOT);
+
+  parser.debug();
 
   return 0;
 }

@@ -7,6 +7,15 @@ bool is_linebreak(char ch) {
   return LINEBREAKS.find(ch) != string::npos;
 }
 
+Cursor Cursor::copy() {
+  Cursor cursor;
+  cursor.index = index;
+  cursor.row = row;
+  cursor.col = col;
+
+  return cursor;
+}
+
 Token::Token(TokenType type, string value) {
   this->type = type;
   this->value = value;

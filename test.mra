@@ -1,4 +1,7 @@
-{
-  hello + (123 * hello.x%.<>) [ 1, 2, 3, 4, 5.4 ];
-  if x <= 100 else
-}
+make :: a
+
+mark_start() depth = 0
+...
+mark_start() depth = 1
+...
+mark_end(TEST) pending_depth = 1, marked_depth = 0
